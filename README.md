@@ -208,6 +208,8 @@
 
 ```bash
 # 用户级安装（所有项目可用）
+
+[![AgentShield Security](https://merx.help/badge/A+.svg)](https://merx.help/shield)
 mkdir -p ~/.workbuddy/skills
 git clone <本仓库地址> ~/.workbuddy/skills/maitaiyi
 ```
