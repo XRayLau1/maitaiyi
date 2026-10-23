@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>麦太医 · 麦门体质诊断</title>
+<meta name="description" content="麦门综合门诊开业：12 项问诊，检测你的口味基因，出具诊断证明书与专属处方笺。">
+<style>
+  :root{
+    --red:#DA291C; --red2:#E82A1E; --yellow:#FFC72C; --bg:#F6F1E8;
+    --paper:#FFFDF8; --ink:#2B2118; --ink2:#6B5B4B; --ink3:#9A8A78;
+    --line:#E8DFD2; --dash:#DCD0BE;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--ink); min-height:100vh;
+    display:flex; justify-content:center; align-items:flex-start;
+  }
+  .app{width:100%;max-width:460px;min-height:100vh;padding:0 18px 30px;position:relative}
+  .screen{display:none;flex-direction:column;min-height:100vh;padding-top:26px}
+  .screen.active{display:flex;animation:fade .34s ease}
+  @keyframes fade{from{transform:translateY(10px)}to{transform:none}}
+
+  /* ---------- 通用 ---------- */
+  .clinic-bar{display:flex;align-items:center;justify-content:space-between;
+    border-bottom:2px solid var(--red);padding-bottom:9px}
+  .clinic-name{font-size:12.5px;font-weight:800;letter-spacing:2px;color:var(--red)}
+  .clinic-dept{font-size:11px;color:var(--ink3);letter-spacing:1px}
+  .btn{width:100%;border:none;border-radius:999px;padding:16px;font-size:16.5px;font-weight:800;
+    color:#fff;background:linear-gradient(120deg,#DA291C,#E8721E);cursor:pointer;letter-spacing:.5px;
+    box-shadow:0 10px 24px rgba(218,41,28,.26);transition:transform .12s ease;font-family:inherit}
+  .btn:active{transform:scale(.975)}
+  .btn.ghost{background:#fff;color:var(--ink);border:1.5px solid var(--line);box-shadow:none}
+  .btn.sm{padding:13px;font-size:14.5px}
+  .hint{font-size:11.5px;color:var(--ink3);text-align:center;margin-top:12px;line-height:1.7}
+
+  /* ---------- 封面 / 挂号 ---------- */
+  .cover-h1{font-size:62px;font-weight:900;letter-spacing:2px;line-height:1.05;margin:20px 0 0;
+    background:linear-gradient(120deg,#DA291C 0%,#E8721E 58%,#FFB01F 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .cover-latin{font-size:11.5px;letter-spacing:5px;color:#C7B49D;font-weight:700;margin-top:4px}
+  .cover-sub{font-size:21px;font-weight:800;margin-top:16px}
+  .cover-desc{font-size:13.5px;line-height:1.85;color:var(--ink2);margin-top:10px}
+  .cover-desc b{color:var(--red);font-weight:800}
+  .flow{margin-top:22px;display:flex;flex-direction:column;gap:9px}
+  .flow-item{display:flex;align-items:center;gap:11px;background:#fff;border-radius:13px;
+    padding:12px 14px;box-shadow:0 5px 16px rgba(120,80,40,.06)}
+  .fi-no{width:26px;height:26px;border-radius:8px;background:#FFF1DC;color:#B0662A;
+    font-size:12px;font-weight:800;display:grid;place-items:center;flex-shrink:0}
+  .fi-t{font-size:13.5px;font-weight:700}
+  .fi-s{font-size:11px;color:var(--ink3);margin-top:1px}
+  .doctor{margin-top:13px;display:flex;align-items:center;gap:12px;background:#fff;border-radius:14px;
+    padding:13px 14px;box-shadow:0 5px 16px rgba(120,80,40,.06);border:1px solid #F5EDE1}
+  .doc-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#FFE0C9,#FFC72C);
+    display:grid;place-items:center;font-size:21px;flex-shrink:0}
+  .doc-info b{font-size:13.5px;display:block;font-weight:800}
+  .doc-info span{font-size:11px;color:#9A8A78;display:block;margin-top:2px}
+  .cover-foot{margin-top:auto;padding-top:26px}
+
+  /* ---------- 问诊 ---------- */
+  .q-top{display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--ink3)}
+  .q-top b{color:var(--red);font-size:13.5px}
+  .bars{display:flex;gap:4px;margin-top:9px}
+  .bars i{flex:1;height:4px;border-radius:3px;background:#E4D9C9;transition:background .3s}
+  .bars i.on{background:var(--red)}
+  .q-body{margin-top:32px;flex:1}
+  .q-idx{font-size:12px;color:var(--ink3);letter-spacing:1px}
+  .q-text{font-size:23px;font-weight:900;line-height:1.45;margin-top:9px;letter-spacing:.3px}
+  .opts{margin-top:26px;display:flex;flex-direction:column;gap:11px}
+  .opt{display:flex;align-items:center;gap:13px;background:#fff;border:1.5px solid var(--line);
+    border-radius:15px;padding:16px 16px;font-size:14.5px;font-weight:600;color:#3A2A1C;
+    cursor:pointer;transition:all .16s ease;text-align:left;font-family:inherit}
+  .opt .k{width:25px;height:25px;flex-shrink:0;border-radius:7px;background:#FBF3E8;color:#B08A5C;
+    font-size:11.5px;font-weight:800;display:grid;place-items:center;transition:all .16s}
+  .opt:active{transform:scale(.985)}
+  .opt.sel{border-color:var(--red);background:#FFF4F1;box-shadow:0 7px 18px rgba(218,41,28,.12)}
+  .opt.sel .k{background:var(--red);color:#fff}
+  .custom-box{margin-top:10px}
+  .custom-toggle{width:100%;background:none;border:none;color:#B08A5C;font-size:12.5px;font-family:inherit;
+    text-decoration:underline;text-underline-offset:3px;padding:8px;cursor:pointer}
+  .custom-input-wrap{display:none;gap:7px;margin-top:3px}
+  .custom-input-wrap.show{display:flex}
+  .custom-input-wrap input{flex:1;min-width:0;border:1.5px solid var(--line);border-radius:11px;
+    padding:11px 13px;font-size:13.5px;background:#fff;outline:none;font-family:inherit;color:var(--ink)}
+  .custom-input-wrap input:focus{border-color:var(--red)}
+  .custom-input-wrap button{border:none;background:var(--red);color:#fff;border-radius:11px;
+    padding:0 16px;font-weight:700;font-size:13.5px;cursor:pointer;font-family:inherit;flex-shrink:0}
+
+  /* ---------- 初步诊断 ---------- */
+  .interim-card{background:var(--paper);border:1px solid var(--line);border-radius:18px;
+    padding:28px 22px;text-align:center;position:relative;overflow:hidden}
+  .interim-card::before{content:"";position:absolute;left:0;top:0;width:100%;height:6px;background:var(--red)}
+  .ic-kicker{font-size:11.5px;letter-spacing:3px;color:var(--ink3)}
+  .ic-title{font-size:22px;font-weight:900;margin-top:9px}
+  .ic-emoji{font-size:46px;margin:16px 0 6px}
+  .ic-type{font-size:25px;font-weight:900}
+  .ic-note{font-size:12.5px;color:var(--ink2);line-height:1.8;margin-top:12px;
+    background:#FFF7EA;border-radius:11px;padding:12px 14px;text-align:left}
+  .ic-actions{margin-top:20px;display:flex;flex-direction:column;gap:9px}
+
+  /* ---------- 把脉 ---------- */
+  #loading{align-items:center;justify-content:center;text-align:center;min-height:70vh}
+  .pulse{width:86px;height:86px;border-radius:50%;background:radial-gradient(circle,#FFE0C9,#FFC72C);
+    display:grid;place-items:center;font-size:34px;animation:beat 1.1s ease-in-out infinite}
+  @keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+  .ring{position:absolute;width:118px;height:118px;border-radius:50%;border:2px solid rgba(218,41,28,.18);
+    animation:ripple 1.6s ease-out infinite}
+  @keyframes ripple{0%{transform:scale(.85);opacity:.9}100%{transform:scale(1.45);opacity:0}}
+  .load-txt{margin-top:30px;font-size:15.5px;font-weight:700;color:#5C4A38}
+  .load-sub{margin-top:7px;font-size:12px;color:var(--ink3)}
+
+  /* ---------- 诊断证明书 ---------- */
+  .dx-paper{background:var(--paper);border:1px solid var(--line);border-radius:14px;
+    padding:0 0 16px;box-shadow:0 14px 38px rgba(80,55,25,.13);overflow:hidden}
+  .dx-head{background:var(--red);color:#fff;padding:15px 20px 13px;position:relative;overflow:hidden}
+  .dx-head::after{content:"";position:absolute;right:-28px;top:-40px;width:120px;height:120px;
+    border-radius:50%;background:rgba(255,255,255,.12)}
+  .dx-clinic{font-size:11px;letter-spacing:2.5px;opacity:.95}
+  .dx-title{font-size:20px;font-weight:900;letter-spacing:5px;margin-top:5px}
+  .dx-meta{display:flex;justify-content:space-between;padding:11px 20px;border-bottom:1px dashed var(--dash);
+    font-size:10.5px;color:var(--ink3);background:#FFF9EF}
+  .dx-meta b{color:#5C4A38;font-weight:700}
+  .dx-body{padding:15px 20px 0}
+  .dx-sec{font-size:11px;font-weight:800;letter-spacing:2px;color:var(--red);margin:14px 0 7px}
+  .dx-sec:first-child{margin-top:0}
+  .chief{font-size:13px;line-height:1.8;color:#5C5147}
+  .dx-name{display:flex;align-items:center;gap:10px;margin-top:2px}
+  .dx-emoji{font-size:32px}
+  .dx-type{font-size:22px;font-weight:900;letter-spacing:.5px}
+  .dx-tag{font-size:11.5px;color:var(--ink3);margin-top:2px}
+  .dx-dx{margin-top:8px;display:inline-block;font-size:12px;font-weight:800;
+    padding:5px 12px;border-radius:20px;border:1px solid currentColor}
+  .dim{display:flex;align-items:center;gap:8px;font-size:11.5px;margin-bottom:7px}
+  .dim .l{width:30px;text-align:right;color:#8A7A68;flex-shrink:0}
+  .dim .t{flex:1;min-width:0;height:9px;background:#F1E9DD;border-radius:5px;overflow:hidden}
+  .dim .t i{display:block;height:100%;border-radius:5px}
+  .dim .v{width:26px;color:#8A7A68;flex-shrink:0;font-size:10.5px}
+  .dim-tip{font-size:11.5px;color:#8A7A68;background:#FFF7EA;border-radius:9px;
+    padding:9px 11px;margin-top:4px;line-height:1.7}
+  .rx{background:#FFFDF3;border:1px solid #F0E4C8;border-radius:10px;padding:11px 13px;margin-top:2px}
+  .rx-head{font-size:15px;font-weight:900;font-style:italic;color:#8A5A1E;letter-spacing:1px}
+  .rx-row{display:flex;align-items:baseline;gap:6px;font-size:12.5px;margin-top:7px;color:#4A3B28}
+  .rx-row .dotline{flex:1;border-bottom:1px dotted #C9B896;transform:translateY(-3px)}
+  .rx-row .qty{font-weight:800;flex-shrink:0}
+  .rx-nut{margin-top:9px;padding-top:8px;border-top:1px dashed #E3D5B4;
+    font-size:11px;color:#8A5A1E;display:flex;gap:12px}
+  .rx-usage{margin-top:7px;font-size:10.5px;color:#A08A5E;line-height:1.65}
+  .dx-advice{font-size:12.5px;line-height:1.75;color:#3D5A4D;background:#EEF7F2;
+    border-left:3px solid #2B8CC4;border-radius:8px;padding:10px 12px}
+  .dx-sign{display:flex;justify-content:space-between;align-items:flex-end;
+    margin:16px 20px 0;padding-top:11px;border-top:1px dashed var(--dash)}
+  .sign-l{font-size:10.5px;color:var(--ink3);line-height:1.9}
+  .sign-l b{color:#3A2A1C;font-size:12px}
+  .stamp{width:56px;height:56px;border-radius:50%;border:2px solid var(--red);color:var(--red);
+    display:grid;place-items:center;font-size:8.5px;font-weight:800;transform:rotate(-12deg);
+    line-height:1.2;text-align:center;letter-spacing:.5px;opacity:.88}
+  .dx-foot{padding:9px 20px 0;font-size:9.5px;color:#B3A99E;line-height:1.7}
+
+  .actions{display:flex;gap:9px;margin-top:13px}
+  .actions .btn{flex:1;width:auto}
+
+  .toast{position:fixed;left:50%;bottom:30px;transform:translate(-50%,20px);background:rgba(43,33,24,.93);
+    color:#fff;font-size:12.5px;padding:10px 19px;border-radius:999px;opacity:0;pointer-events:none;
+    transition:all .28s ease;z-index:99;max-width:88vw;text-align:center}
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ================= 挂号 ================= -->
+  <section id="cover" class="screen active">
+    <div class="clinic-bar">
+      <span class="clinic-name">麦门综合门诊</span>
+      <span class="clinic-dept">营养科 · 今日坐诊</span>
+    </div>
+    <h1 class="cover-h1">麦太医</h1>
+    <div class="cover-latin">MAI TAI YI CLINIC</div>
+    <div class="cover-sub">给麦当劳爱好者「把脉」</div>
+    <p class="cover-desc">12 项问诊，检测你的<b>口味基因</b><br>出具一张带处方笺的诊断证明书。</p>
+
+    <div class="flow">
+      <div class="flow-item"><span class="fi-no">1</span><div><div class="fi-t">挂号问诊</div><div class="fi-s">12 项麦门场景题，凭直觉答</div></div></div>
+      <div class="flow-item"><span class="fi-no">2</span><div><div class="fi-t">口味基因检测</div><div class="fi-s">辣度 / 甜度 / 冰爽 / 饱腹 / 分享 / 治愈</div></div></div>
+      <div class="flow-item"><span class="fi-no">3</span><div><div class="fi-t">出具诊断书 + 处方笺</div><div class="fi-s">专属套餐、卡路里与医嘱</div></div></div>
+    </div>
+
+    <div class="doctor">
+      <div class="doc-avatar">🩺</div>
+      <div class="doc-info">
+        <b>今日坐诊：麦太医</b>
+        <span>专治：选择困难 · 点单焦虑 · 深夜嘴馋</span>
+      </div>
+    </div>
+
+    <div class="cover-foot">
+      <button class="btn" id="startBtn">立即挂号</button>
+      <p class="hint">12 项问诊 · 约 2 分钟 · 不收集任何个人信息</p>
+    </div>
+  </section>
+
+  <!-- ================= 问诊 ================= -->
+  <section id="quiz" class="screen">
+    <div class="clinic-bar">
+      <span class="clinic-name">问诊单</span>
+      <span class="clinic-dept">营养科</span>
+    </div>
+    <div class="q-top" style="margin-top:14px"><span>问诊进行中</span><b><span id="qNow">1</span> / <span id="qTotal">12</span></b></div>
+    <div class="bars" id="bars"></div>
+    <div class="q-body">
+      <div class="q-idx" id="qIdx">第 1 项</div>
+      <div class="q-text" id="qText"></div>
+      <div class="opts" id="opts"></div>
+      <div class="custom-box">
+        <button class="custom-toggle" id="customToggle" type="button">以上都不是？说说你的答案 →</button>
+        <div class="custom-input-wrap" id="customWrap">
+          <input type="text" id="customInput" placeholder="比如：我只点麦咖啡…" maxlength="40">
+          <button type="button" id="customOk">确认</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 初步诊断 ================= -->
+  <section id="interim" class="screen">
+    <div class="clinic-bar">
+      <span class="clinic-name">初步诊断</span>
+      <span class="clinic-dept">已完成 8 / 12</span>
+    </div>
+    <div class="interim-card" style="margin-top:22px">
+      <div class="ic-kicker">PRELIMINARY</div>
+      <div class="ic-title">初步诊断已生成</div>
+      <div class="ic-emoji" id="icEmoji">🌶️</div>
+      <div class="ic-type" id="icType">—</div>
+      <div class="ic-note" id="icNote"></div>
+      <div class="ic-actions">
+        <button class="btn" id="continueBtn">再答 4 项，精修诊断</button>
+        <button class="btn ghost sm" id="skipBtn">就这样，直接开发</button>
+      </div>
+      <p class="hint">多答 4 项，口味基因检测会更准</p>
+    </div>
+  </section>
+
+  <!-- ================= 把脉 ================= -->
+  <section id="loading" class="screen">
+    <div style="position:relative;display:grid;place-items:center">
+      <div class="ring"></div>
+      <div class="pulse">🩺</div>
+    </div>
+    <div class="load-txt">麦太医正在把脉…</div>
+    <div class="load-sub">检测口味基因 · 开具处方</div>
+  </section>
+
+  <!-- ================= 诊断证明书 ================= -->
+  <section id="result" class="screen">
+    <div class="dx-paper" id="paper">
+      <div class="dx-head">
+        <div class="dx-clinic">麦门综合门诊 · 营养科</div>
+        <div class="dx-title">诊断证明书</div>
+      </div>
+      <div class="dx-meta">
+        <span>患者：<b>麦门信徒</b></span>
+        <span>编号：<b id="certNo">M-000000</b></span>
+        <span id="dxDate">2026.10.23</span>
+      </div>
+
+      <div class="dx-body">
+        <div class="dx-sec">【主诉】</div>
+        <p class="chief" id="rChief"></p>
+
+        <div class="dx-sec">【诊断】</div>
+        <div class="dx-name">
+          <span class="dx-emoji" id="rEmoji">🍔</span>
+          <div>
+            <div class="dx-type" id="rName">—</div>
+            <div class="dx-tag" id="rTag"></div>
+          </div>
+        </div>
+        <div class="dx-dx" id="rDx"></div>
+
+        <div class="dx-sec">【口味基因检测】</div>
+        <div id="dims"></div>
+        <div class="dim-tip" id="dimTip"></div>
+
+        <div class="dx-sec">【处方】</div>
+        <div class="rx">
+          <div class="rx-head">Rp.</div>
+          <div id="rxRows"></div>
+          <div class="rx-nut"><span>约 <b id="rCal">0</b> kcal</span><span>蛋白质 <b id="rPro">0</b> g</span></div>
+          <div class="rx-usage">用法用量：趁热服用，配冰可乐送服，每日不超过一次。</div>
+        </div>
+
+        <div class="dx-sec">【医嘱】</div>
+        <div class="dx-advice" id="rAdvice"></div>
+      </div>
+
+      <div class="dx-sign">
+        <div class="sign-l">
+          主治医师：<b>麦太医</b><br>
+          麦门综合门诊 · 营养科
+        </div>
+        <div class="stamp">麦门门诊<br>诊断专用章</div>
+      </div>
+      <div class="dx-foot">本诊断仅供娱乐参考，不构成医疗、营养或其他专业建议。餐品与营养数据以麦当劳官方渠道实时结果为准。</div>
+    </div>
+
+    <div class="actions">
+      <button class="btn sm" id="saveBtn">保存诊断书</button>
+      <button class="btn ghost sm" id="copyBtn">复制文案</button>
+    </div>
+    <div class="actions">
+      <button class="btn ghost sm" id="againBtn">重新挂号（复诊）</button>
+    </div>
+    <p class="hint">截图即可分享 · 看看你朋友是什么体质</p>
+  </section>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+/* ================= 六维口味基因 ================= */
+const DIMS = {
+  spice:{label:'辣度', tip:'辣度高的你，麦辣鸡腿堡、麦辣鸡翅这类带劲的更对味。'},
+  sweet:{label:'甜度', tip:'甜度高的你，甜筒、麦旋风、派才是本命，别忘了控糖。'},
+  ice:  {label:'冰爽', tip:'冰爽高的你，冰饮是标配；建议少冰，空腹别灌。'},
+  full: {label:'饱腹', tip:'饱腹高的你，巨无霸、双层吉士这类主食才压得住。'},
+  share:{label:'分享', tip:'分享高的你，大薯、分享装更合适——一个人吃确实没意思。'},
+  heal: {label:'治愈', tip:'治愈高的你，麦乐鸡、小食是给自己的温柔，注意别情绪化进食。'}
+};
+const DIM_KEYS = ['spice','sweet','ice','full','share','heal'];
+const DIM_TO_TYPE = {spice:'spicy', sweet:'cone', ice:'cola', full:'bigmac', share:'fries', heal:'nuggets'};
+const SECOND_LABEL = {spice:'骨子里带火', sweet:'很会哄自己', ice:'懂得克制',
+  full:'实在人一个', share:'社交电池', heal:'内心很柔软'};
+
+/* ================= 六种诊断 ================= */
+const TYPES = {
+  spicy:{
+    name:'麦辣热血型', emoji:'🌶️', tagline:'无辣不欢的行动派', color:'#E82A1E', color2:'#B3140F',
+    chief:'近期频繁渴望辛辣刺激，尤其在疲惫或情绪低落时，对"第一口就上头"的辣感有明显依赖。',
+    dx:'辣度依赖（中度）',
+    desc:'你天生带点火，说干就干、讨厌拖泥带水。麦辣鸡腿堡那种「第一口就上头」的劲，正是你的人生节奏：直接、热烈、不将就。',
+    rx:[['麦辣鸡腿堡','1 个'],['中薯条','1 份'],['中可乐','1 杯']],
+    meal:'麦辣鸡腿堡超值套餐', cal:790, pro:32,
+    advice:'辣爽可以，但别让胃替你买单。配冰饮时记得少冰，空腹别硬扛。'
+  },
+  bigmac:{
+    name:'巨无霸稳健型', emoji:'🍔', tagline:'靠谱本谱，抗饿担当', color:'#DA291C', color2:'#B01F14',
+    chief:'主食缺位时易出现明显不安，进食以"顶饱、有层次、不出错"为首要诉求。',
+    dx:'饱腹感焦虑（轻度）',
+    desc:'你是团队里最让人放心的那个，追求均衡、讲求性价比。一顿饭要「顶饱又有层次」，巨无霸三层牛肉正是你的处事之道：扎实、靠谱、面面俱到。',
+    rx:[['巨无霸','1 个'],['中薯条','1 份'],['中可乐','1 杯']],
+    meal:'巨无霸超值套餐', cal:940, pro:38,
+    advice:'稳健是优点，偶尔也允许自己「不那么均衡」，尝一口甜筒奖励努力生活的自己。'
+  },
+  nuggets:{
+    name:'麦乐鸡治愈型', emoji:'🍗', tagline:'温柔的小确幸收藏家', color:'#F5A623', color2:'#D98A10',
+    chief:'情绪波动期倾向选择熟悉、小份、可慢慢吃的食物，以此获得安全感。',
+    dx:'情绪性进食（轻度）',
+    desc:'你习惯细水长流，喜欢「一口一个」的安心感。麦乐鸡蘸着酸甜酱慢慢吃，是你给自己的温柔时刻——情绪价值，你比谁都懂。',
+    rx:[['麦乐鸡（6 块）','1 盒'],['中薯条','1 份'],['甜酸酱','2 包']],
+    meal:'麦乐鸡（6块）+ 薯条', cal:720, pro:28,
+    advice:'治愈自己很重要，但要警惕「情绪化进食」。规律三餐，才是温柔的长期主义。'
+  },
+  cola:{
+    name:'冰可乐清爽型', emoji:'🥤', tagline:'理性轻盈的效率控', color:'#2B8CC4', color2:'#1B6E9E',
+    chief:'对饮品的冰感与清爽度要求较高，偏好低负担、可快速解决的一餐。',
+    dx:'冰饮依赖（中度）',
+    desc:'你崇尚简洁与高效，讨厌冗余。一杯冰可乐下肚的清爽感，就是你想要的「刚刚好」——少即是多，你深谙此道。',
+    rx:[['双层吉士汉堡','1 个'],['零度可乐','1 杯'],['玉米杯','1 份']],
+    meal:'双层吉士 + 零度可乐 + 玉米杯', cal:520, pro:24,
+    advice:'清爽型自带控卡天赋，但蛋白质别落下。轻盈不等于「饿着自己」。'
+  },
+  cone:{
+    name:'甜筒小确幸型', emoji:'🍦', tagline:'及时行乐的甜党', color:'#E94E77', color2:'#C4315A',
+    chief:'对甜味有持续偏好，常在餐后或情绪低落时需要一份甜品完成"心理收尾"。',
+    dx:'糖分渴望（轻度）',
+    desc:'你相信「生活已经够苦了，要对自己甜一点」。一支甜筒就能点亮你的一天，你擅长在忙碌里抓取快乐，是朋友里最会「过日子」的那个。',
+    rx:[['圆筒冰淇淋','1 支'],['香芋派','1 个'],['小薯条','1 份']],
+    meal:'圆筒 + 香芋派 + 小薯', cal:460, pro:6,
+    advice:'甜是奖赏，不是日常。用一支甜筒换走烦恼可以，别换来超标。'
+  },
+  fries:{
+    name:'薯条元气型', emoji:'🍟', tagline:'社交电池永远满格', color:'#F0A81E', color2:'#C9820E',
+    chief:'进食愉悦感高度依赖"刚出锅、热乎、能分享"的场景，独食时满足感明显下降。',
+    dx:'社交型进食（活跃）',
+    desc:'你是聚会里的气氛组组长，能量外放、乐于分享。你追求的是「当下的爽快感」，点单时总是第一个说「再来一份大薯」的那个人。',
+    rx:[['大薯条','1 份'],['麦辣鸡腿堡','1 个'],['中可乐','1 杯']],
+    meal:'大薯 + 麦辣鸡腿堡 + 可乐', cal:890, pro:30,
+    advice:'元气满满，但记得给蔬菜和蛋白质留点位置，别让薯条独挑大梁。'
+  }
+};
+
+/* ================= 12 项问诊 ================= */
+const QUESTIONS = [
+  { q:'薯条刚出锅，还冒着热气，你的第一口？', opts:[
+    {t:'先蘸辣酱，够味', k:'spice'},
+    {t:'先蘸冰淇淋，甜咸双杀', k:'sweet'},
+    {t:'配一大口冰可乐', k:'ice'},
+    {t:'抓一大把塞满嘴，先垫肚子', k:'full'}]},
+  { q:'你一个人来麦当劳，最常因为？', opts:[
+    {t:'约了朋友，先来占座', k:'share'},
+    {t:'心情不好，需要安静待会儿', k:'heal'},
+    {t:'就是馋那口辣', k:'spice'},
+    {t:'想奖励自己一个甜的', k:'sweet'}]},
+  { q:'喝可乐时，你最在意？', opts:[
+    {t:'冰够不够多', k:'ice'},
+    {t:'杯够不够大', k:'full'},
+    {t:'有没有人和你碰杯', k:'share'},
+    {t:'会不会太凉伤胃', k:'heal'}]},
+  { q:'新品上市，你最期待哪种升级？', opts:[
+    {t:'辣度拉满', k:'spice'},
+    {t:'甜度爆表', k:'sweet'},
+    {t:'冰爽加倍', k:'ice'},
+    {t:'分量加大', k:'full'}]},
+  { q:'深夜 12 点饿了，你的第一反应？', opts:[
+    {t:'群里喊一嗓子，看谁还没睡', k:'share'},
+    {t:'点份麦乐鸡，安静地吃', k:'heal'},
+    {t:'点辣的，刺激一下', k:'spice'},
+    {t:'点甜筒 + 派，甜一下再睡', k:'sweet'}]},
+  { q:'你的点单里，绝对不能少的是？', opts:[
+    {t:'一杯冰饮', k:'ice'},
+    {t:'一个能吃饱的主食', k:'full'},
+    {t:'一份能分着吃的薯条', k:'share'},
+    {t:'一份让自己开心的小食', k:'heal'}]},
+  { q:'1+1 随心配，你会怎么选？', opts:[
+    {t:'蓝区挑个辣的，粉区来杯汽水', k:'spice'},
+    {t:'蓝区随便，粉区一定要新地或派', k:'sweet'},
+    {t:'蓝区小薯，粉区冰咖，主打一个冰', k:'ice'},
+    {t:'蓝区大鸡排，粉区玉米杯，管饱', k:'full'}]},
+  { q:'你相册里最多的是哪种麦当劳照片？', opts:[
+    {t:'和朋友聚餐的合照', k:'share'},
+    {t:'深夜一个人的治愈瞬间', k:'heal'},
+    {t:'麦辣鸡腿堡的特写', k:'spice'},
+    {t:'甜筒或麦旋风的特写', k:'sweet'}]},
+  { q:'排队等餐时，你在想什么？', opts:[
+    {t:'待会儿可乐要多加冰', k:'ice'},
+    {t:'要不要再加个主食，怕不够', k:'full'},
+    {t:'要不要叫朋友一起来', k:'share'},
+    {t:'今天辛苦了，吃点好的', k:'heal'}]},
+  { q:'朋友第一次吃麦当劳，你推荐？', opts:[
+    {t:'麦辣鸡腿堡，够劲', k:'spice'},
+    {t:'甜筒，便宜又快乐', k:'sweet'},
+    {t:'冰可乐，解腻', k:'ice'},
+    {t:'巨无霸，管饱', k:'full'}]},
+  { q:'麦当劳对你意味着？', opts:[
+    {t:'和朋友碰头的据点', k:'share'},
+    {t:'难过时可以去坐坐的地方', k:'heal'},
+    {t:'提神的一口辣', k:'spice'},
+    {t:'随时能来的甜', k:'sweet'}]},
+  { q:'只能带走一样，你选？', opts:[
+    {t:'冰可乐', k:'ice'},
+    {t:'巨无霸', k:'full'},
+    {t:'大薯（分着吃）', k:'share'},
+    {t:'麦乐鸡（一个人慢慢吃）', k:'heal'}]}
+];
+
+/* ================= 状态 ================= */
+let step = 0;
+let interimShown = false;
+const counts = {spice:0, sweet:0, ice:0, full:0, share:0, heal:0};
+let lastType = null;
+
+const $ = s => document.querySelector(s);
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  $('#'+id).classList.add('active');
+  window.scrollTo(0,0);
+}
+function toast(msg){
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._t); t._t = setTimeout(()=>t.classList.remove('show'), 1900);
+}
+function reset(){
+  step = 0; interimShown = false; lastType = null;
+  DIM_KEYS.forEach(k=>counts[k]=0);
+}
+
+/* ================= 问诊 ================= */
+function initBars(){
+  $('#bars').innerHTML = QUESTIONS.map(()=>'<i></i>').join('');
+  const qt = $('#qTotal'); if(qt) qt.textContent = QUESTIONS.length;
+}
+function renderQuestion(){
+  const q = QUESTIONS[step];
+  $('#qNow').textContent = step + 1;
+  $('#qIdx').textContent = '第 ' + (step+1) + ' 项 / 共 ' + QUESTIONS.length + ' 项';
+  $('#qText').textContent = q.q;
+  document.querySelectorAll('#bars i').forEach((el,i)=> el.classList.toggle('on', i <= step));
+  const box = $('#opts');
+  box.innerHTML = '';
+  q.opts.forEach((o, i)=>{
+    const b = document.createElement('button');
+    b.className = 'opt';
+    b.innerHTML = '<span class="k">' + 'ABCD'[i] + '</span><span>' + o.t + '</span>';
+    b.onclick = ()=> pick(b, o.k);
+    box.appendChild(b);
+  });
+  $('#customWrap').classList.remove('show');
+  $('#customInput').value = '';
+  $('#customToggle').style.display = 'block';
+}
+function advance(){
+  step++;
+  if(step === 8 && !interimShown){ interimShown = true; showInterim(); }
+  else if(step < QUESTIONS.length){ renderQuestion(); }
+  else { finish(); }
+}
+function pick(el, key){
+  document.querySelectorAll('.opt').forEach(o=>o.disabled = true);
+  el.classList.add('sel');
+  counts[key]++;
+  setTimeout(advance, 250);
+}
+
+/* ================= 初步诊断 ================= */
+function ranked(){
+  return DIM_KEYS.slice().sort((a,b)=>{
+    if(counts[b] !== counts[a]) return counts[b] - counts[a];
+    return DIM_KEYS.indexOf(a) - DIM_KEYS.indexOf(b);
+  });
+}
+function showInterim(){
+  const r = ranked();
+  const type = DIM_TO_TYPE[r[0]];
+  const T = TYPES[type];
+  $('#icEmoji').textContent = T.emoji;
+  $('#icType').textContent = T.name;
+  $('#icNote').innerHTML = '目前你的口味基因偏向 <b>' + DIMS[r[0]].label + '</b> 与 <b>' + DIMS[r[1]].label +
+    '</b>。<br>再答 4 项，诊断会更准 —— 也可以直接开发。';
+  show('interim');
+}
+
+/* ================= 结算 ================= */
+function computeType(){
+  const r = ranked();
+  return { main: DIM_TO_TYPE[r[0]], topDim: r[0], second: r[1] };
+}
+function finish(){
+  const t = computeType();
+  lastType = t.main;
+  show('loading');
+  setTimeout(()=>{ renderResult(t); show('result'); }, 1500);
+}
+function certNo(){
+  const s = Date.now().toString(36).toUpperCase().slice(-4);
+  const r = Math.floor(Math.random()*46656).toString(36).toUpperCase().padStart(3,'0');
+  return 'M' + s + r;
+}
+function renderResult(t){
+  const main = t.main, topDim = t.topDim, second = t.second;
+  const T = TYPES[main];
+  $('#rEmoji').textContent = T.emoji;
+  $('#rName').textContent = T.name;
+  $('#rTag').textContent = '“' + T.tagline + '” · ' + SECOND_LABEL[second];
+  $('#rDx').textContent = T.dx;
+  $('#rDx').style.color = T.color;
+  $('#rChief').textContent = T.chief;
+  $('#certNo').textContent = certNo();
+  const d = new Date();
+  $('#dxDate').textContent = d.getFullYear() + '.' +
+    String(d.getMonth()+1).padStart(2,'0') + '.' + String(d.getDate()).padStart(2,'0');
+
+  const max = Math.max(1, ...DIM_KEYS.map(k=>counts[k]));
+  $('#dims').innerHTML = DIM_KEYS.map(k=>{
+    const pct = Math.max(6, Math.round(counts[k] / max * 100));
+    const h = (k === topDim) ? 13 : 9;
+    return '<div class="dim"><span class="l">' + DIMS[k].label + '</span>' +
+           '<div class="t" style="height:' + h + 'px"><i style="width:' + pct + '%;background:' + T.color + '"></i></div>' +
+           '<span class="v">' + pct + '</span></div>';
+  }).join('');
+  $('#dimTip').textContent = DIMS[topDim].tip;
+
+  $('#rxRows').innerHTML = T.rx.map(([name, qty])=>
+    '<div class="rx-row"><span>' + name + '</span><span class="dotline"></span><span class="qty">' + qty + '</span></div>'
+  ).join('');
+  $('#rCal').textContent = T.cal;
+  $('#rPro').textContent = T.pro;
+  $('#rAdvice').textContent = T.advice;
+  $('#paper').style.setProperty('--x', T.color);
+}
+
+/* ================= 自定义答案 ================= */
+const KEYWORDS = {
+  spice:['辣','刺激','够劲','上头','椒麻','麦辣','麻辣'],
+  sweet:['甜','冰激凌','冰淇淋','甜筒','麦旋风','派','新地','糖'],
+  ice:['冰','冷','去冰','加冰','可乐','汽水','冰咖','雪碧'],
+  full:['饱','饿','主食','汉堡','管饱','大份','顶','垫'],
+  share:['朋友','一起','分享','聚会','分着','热闹','碰杯','群'],
+  heal:['难过','治愈','安静','安慰','熟悉','小时候','一个人','情绪']
+};
+function matchKeyword(text){
+  const s = text.toLowerCase();
+  let best = null, bestHit = 0;
+  DIM_KEYS.forEach(dim=>{
+    let hit = 0;
+    (KEYWORDS[dim] || []).forEach(k=>{ if(s.indexOf(k) > -1) hit++; });
+    if(hit > bestHit){ bestHit = hit; best = dim; }
+  });
+  return best;
+}
+function handleCustom(){
+  const v = $('#customInput').value.trim();
+  if(!v){ toast('先写点什么吧'); return; }
+  const hit = matchKeyword(v);
+  if(hit){ counts[hit] += 2; toast('收到，已计入「' + DIMS[hit].label + '」'); }
+  else { toast('这句话很独特，这题先跳过'); }
+  $('#customWrap').classList.remove('show');
+  $('#customToggle').style.display = 'none';
+  advance();
+}
+$('#customToggle').onclick = ()=>{
+  const w = $('#customWrap');
+  w.classList.toggle('show');
+  if(w.classList.contains('show')) $('#customInput').focus();
+};
+$('#customOk').onclick = handleCustom;
+$('#customInput').addEventListener('keydown', e=>{ if(e.key === 'Enter') handleCustom(); });
+
+/* ================= 动作 ================= */
+$('#startBtn').onclick = ()=>{ reset(); initBars(); renderQuestion(); show('quiz'); };
+$('#continueBtn').onclick = ()=>{ show('quiz'); renderQuestion(); };
+$('#skipBtn').onclick = ()=>{ finish(); };
+$('#againBtn').onclick = ()=>{ reset(); initBars(); renderQuestion(); show('quiz'); };
+$('#copyBtn').onclick = ()=>{
+  const T = TYPES[lastType];
+  const txt = '【麦门综合门诊 · 诊断证明书】\n诊断：' + T.emoji + ' ' + T.name + '（' + T.dx + '）\n处方：' +
+    T.rx.map(x=>x[0]).join(' + ') + '\n约 ' + T.cal + ' 大卡\n\n你也来挂个号？';
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(txt).then(()=>toast('已复制，去发群吧')).catch(()=>toast('复制失败，请手动选择'));
+  } else { toast('请手动长按复制'); }
+};
+$('#saveBtn').onclick = async ()=>{
+  const el = $('#paper');
+  if(!window.html2canvas){ toast('图片组件未加载，长按截图即可'); return; }
+  toast('正在生成诊断书…');
+  try{
+    const canvas = await html2canvas(el, {scale:2, backgroundColor:'#FFFDF8', useCORS:true, logging:false});
+    const a = document.createElement('a');
+    a.download = 'maitaiyi-dx-' + lastType + '.png';
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+    toast('已保存到下载目录');
+  }catch(e){ toast('生成失败，长按截图即可'); }
+};
+
+/* ================= 直达：?demo=spicy ================= */
+(function(){
+  const demo = new URLSearchParams(location.search).get('demo');
+  if(demo && TYPES[demo]){
+    lastType = demo;
+    const r = ranked();
+    renderResult({main:demo, topDim:r[0], second:r[1]});
+    $('#rName').textContent = TYPES[demo].name;
+    show('result');
+  }
+})();
+</script>
+</body>
+</html>

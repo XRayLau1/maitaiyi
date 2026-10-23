@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    width:1200px; height:420px; overflow:hidden; position:relative;
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:#FFFBF4; color:#2B2118;
+  }
+  .glow-a { position:absolute; width:520px; height:520px; border-radius:50%;
+            background:radial-gradient(circle, #FFE2BE 0%, rgba(255,226,190,0) 68%);
+            right:-120px; top:-160px; }
+  .glow-b { position:absolute; width:420px; height:420px; border-radius:50%;
+            background:radial-gradient(circle, #FFD3CB 0%, rgba(255,211,203,0) 70%);
+            left:-140px; bottom:-180px; }
+  .wrap { position:relative; display:flex; height:100%; }
+
+  .left { width:600px; padding:56px 0 56px 64px; display:flex; flex-direction:column; justify-content:center; }
+  .eyebrow { display:inline-flex; align-items:center; gap:8px; font-size:13px; color:#8A5A1E;
+             background:#FFF1DC; border:1px solid #FFE0B0; border-radius:20px; padding:5px 14px;
+             width:fit-content; letter-spacing:.5px; }
+  .dot { width:6px; height:6px; border-radius:50%; background:#DA291C; }
+  .title-row { display:flex; align-items:baseline; gap:14px; margin:18px 0 6px; }
+  h1 { font-size:76px; font-weight:900; letter-spacing:2px; line-height:1;
+       background:linear-gradient(120deg,#DA291C 0%,#E8721E 60%,#FFB01F 100%);
+       -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .latin { font-size:15px; letter-spacing:5px; color:#C0AC96; font-weight:700; }
+  .sub { font-size:25px; font-weight:800; color:#3A2A1C; margin-top:2px; }
+  .desc { font-size:15px; color:#7A6A59; margin-top:14px; line-height:1.7; }
+  .desc b { color:#DA291C; font-weight:800; }
+  .tags { display:flex; gap:10px; margin-top:24px; }
+  .tag { font-size:13px; color:#5C4A38; background:#fff; border:1px solid #F0E3D2;
+         border-radius:10px; padding:8px 13px; font-weight:600; }
+
+  .right { flex:1; position:relative; }
+  .card { position:absolute; width:168px; height:250px; background:#fff; border-radius:18px;
+          box-shadow:0 18px 40px rgba(90,60,30,.16); padding:16px 14px; overflow:hidden; }
+  .card .stripe { position:absolute; left:0; top:0; width:100%; height:6px; }
+  .card .emoji { font-size:34px; margin-top:18px; }
+  .card .cname { font-size:16px; font-weight:900; margin-top:8px; letter-spacing:.3px; }
+  .card .ctag { font-size:10px; color:#9A8A78; margin-top:4px; line-height:1.5; }
+  .mini { margin-top:14px; display:flex; flex-direction:column; gap:7px; }
+  .mrow { display:flex; align-items:center; gap:6px; }
+  .mrow .lbl { font-size:9px; color:#B4A594; width:20px; }
+  .mrow .track { flex:1; height:6px; background:#F5EEE4; border-radius:4px; overflow:hidden; }
+  .mrow .fill { height:100%; border-radius:4px; }
+  .card .seal { position:absolute; right:11px; top:14px; font-size:8px; color:#C9B8A4;
+                border:1px solid #EEE3D4; border-radius:10px; padding:2px 6px; }
+
+  .c1 { left:16px;  top:78px; transform:rotate(-7deg); z-index:3; }
+  .c2 { left:198px; top:48px; transform:rotate(0deg);  z-index:2; }
+  .c3 { left:380px; top:80px; transform:rotate(7deg);  z-index:1; }
+</style>
+</head>
+<body>
+  <div class="glow-a"></div>
+  <div class="glow-b"></div>
+  <div class="wrap">
+    <div class="left">
+      <span class="eyebrow"><span class="dot"></span>麦当劳 MCP 创意开发大赛 · 参赛作品</span>
+      <div class="title-row">
+        <h1>麦太医</h1>
+        <span class="latin">MAI TAI YI</span>
+      </div>
+      <div class="sub">给麦当劳爱好者「把脉」</div>
+      <div class="desc">12 项问诊 × 麦当劳 MCP <b>真实营养数据</b><br>开具你的专属「诊断书 + 处方笺」</div>
+      <div class="tags">
+        <span class="tag">🩺 口味基因检测</span>
+        <span class="tag">📊 真实卡路里</span>
+        <span class="tag">📋 诊断书 · 处方笺</span>
+      </div>
+    </div>
+
+    <div class="right">
+      <div class="card c1">
+        <div class="stripe" style="background:#E82A1E"></div>
+        <div class="seal">REPORT</div>
+        <div class="emoji">🌶️</div>
+        <div class="cname">麦辣热血型</div>
+        <div class="ctag">无辣不欢的行动派</div>
+        <div class="mini">
+          <div class="mrow"><span class="lbl">辣度</span><div class="track"><div class="fill" style="width:98%;background:#E82A1E"></div></div></div>
+          <div class="mrow"><span class="lbl">冰爽</span><div class="track"><div class="fill" style="width:70%;background:#E82A1E"></div></div></div>
+          <div class="mrow"><span class="lbl">饱腹</span><div class="track"><div class="fill" style="width:55%;background:#E82A1E"></div></div></div>
+        </div>
+      </div>
+      <div class="card c2">
+        <div class="stripe" style="background:#DA291C"></div>
+        <div class="seal">REPORT</div>
+        <div class="emoji">🍔</div>
+        <div class="cname">巨无霸稳健型</div>
+        <div class="ctag">靠谱本谱，抗饿担当</div>
+        <div class="mini">
+          <div class="mrow"><span class="lbl">饱腹</span><div class="track"><div class="fill" style="width:96%;background:#DA291C"></div></div></div>
+          <div class="mrow"><span class="lbl">分享</span><div class="track"><div class="fill" style="width:62%;background:#DA291C"></div></div></div>
+          <div class="mrow"><span class="lbl">治愈</span><div class="track"><div class="fill" style="width:65%;background:#DA291C"></div></div></div>
+        </div>
+      </div>
+      <div class="card c3">
+        <div class="stripe" style="background:#E94E77"></div>
+        <div class="seal">REPORT</div>
+        <div class="emoji">🍦</div>
+        <div class="cname">甜筒小确幸型</div>
+        <div class="ctag">及时行乐的甜党</div>
+        <div class="mini">
+          <div class="mrow"><span class="lbl">甜度</span><div class="track"><div class="fill" style="width:99%;background:#E94E77"></div></div></div>
+          <div class="mrow"><span class="lbl">治愈</span><div class="track"><div class="fill" style="width:75%;background:#E94E77"></div></div></div>
+          <div class="mrow"><span class="lbl">分享</span><div class="track"><div class="fill" style="width:65%;background:#E94E77"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

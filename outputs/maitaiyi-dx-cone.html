@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>麦太医 · 诊断证明书</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#F6F1E8;font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+display:flex;justify-content:center;padding:22px 12px;color:#2B2118}
+.paper{width:420px;max-width:100%;background:#FFFDF8;border:1px solid #E8DFD2;border-radius:14px;
+overflow:hidden;box-shadow:0 14px 38px rgba(80,55,25,.13)}
+.head{background:#E94E77;color:#fff;padding:15px 20px 13px;position:relative;overflow:hidden}
+.head::after{content:"";position:absolute;right:-28px;top:-40px;width:120px;height:120px;
+border-radius:50%;background:rgba(255,255,255,.12)}
+.clinic{font-size:11px;letter-spacing:2.5px;opacity:.95}
+.title{font-size:20px;font-weight:900;letter-spacing:5px;margin-top:5px}
+.meta{display:flex;justify-content:space-between;padding:11px 20px;border-bottom:1px dashed #DCD0BE;
+font-size:10.5px;color:#9A8A78;background:#FFF9EF}
+.meta b{color:#5C4A38}
+.body{padding:15px 20px 0}
+.sec{font-size:11px;font-weight:800;letter-spacing:2px;color:#E94E77;margin:14px 0 7px}
+.sec:first-child{margin-top:0}
+.chief{font-size:13px;line-height:1.8;color:#5C5147}
+.name{display:flex;align-items:center;gap:10px;margin-top:2px}
+.emoji{font-size:32px}
+.tname{font-size:22px;font-weight:900}
+.tag{font-size:11.5px;color:#9A8A78;margin-top:2px}
+.dx{margin-top:8px;display:inline-block;font-size:12px;font-weight:800;padding:5px 12px;
+border-radius:20px;border:1px solid #E94E77;color:#E94E77}
+.dim{display:flex;align-items:center;gap:8px;font-size:11.5px;margin-bottom:7px}
+.dim .l{width:30px;text-align:right;color:#8A7A68;flex-shrink:0}
+.dim .t{flex:1;min-width:0;background:#F1E9DD;border-radius:5px;overflow:hidden}
+.dim .t i{display:block;height:100%;border-radius:5px}
+.dim .v{width:26px;color:#8A7A68;flex-shrink:0;font-size:10.5px}
+.rx{background:#FFFDF3;border:1px solid #F0E4C8;border-radius:10px;padding:11px 13px}
+.rx-head{font-size:15px;font-weight:900;font-style:italic;color:#8A5A1E;letter-spacing:1px}
+.rx-row{display:flex;align-items:baseline;gap:6px;font-size:12.5px;margin-top:7px;color:#4A3B28}
+.rx-row .dotline{flex:1;border-bottom:1px dotted #C9B896;transform:translateY(-3px)}
+.rx-row .qty{font-weight:800;flex-shrink:0}
+.nut{margin-top:9px;padding-top:8px;border-top:1px dashed #E3D5B4;font-size:11px;color:#8A5A1E;
+display:flex;gap:12px}
+.advice{font-size:12.5px;line-height:1.75;color:#3D5A4D;background:#EEF7F2;border-left:3px solid #2B8CC4;
+border-radius:8px;padding:10px 12px}
+.sign{display:flex;justify-content:space-between;align-items:flex-end;margin:16px 20px 0;
+padding-top:11px;border-top:1px dashed #DCD0BE}
+.sign-l{font-size:10.5px;color:#9A8A78;line-height:1.9}
+.sign-l b{color:#3A2A1C;font-size:12px}
+.stamp{width:56px;height:56px;border-radius:50%;border:2px solid #E94E77;color:#E94E77;
+display:grid;place-items:center;font-size:8.5px;font-weight:800;transform:rotate(-12deg);
+line-height:1.2;text-align:center;letter-spacing:.5px;opacity:.88}
+.foot{padding:9px 20px 14px;font-size:9.5px;color:#B3A99E;line-height:1.7}
+</style></head><body>
+<div class="paper">
+  <div class="head">
+    <div class="clinic">麦门综合门诊 · 营养科</div>
+    <div class="title">诊断证明书</div>
+  </div>
+  <div class="meta">
+    <span>患者：<b>麦门信徒</b></span><span>编号：<b>M2610232334</b></span><span>2026.10.23</span>
+  </div>
+  <div class="body">
+    <div class="sec">【主诉】</div>
+    <p class="chief">对甜味有持续偏好，常在餐后或情绪低落时需要一份甜品完成「心理收尾」。</p>
+    <div class="sec">【诊断】</div>
+    <div class="name"><span class="emoji">🍦</span>
+      <div><div class="tname">甜筒小确幸型</div>
+      <div class="tag">"及时行乐的甜党"</div></div>
+    </div>
+    <div class="dx">糖分渴望（轻度）</div>
+    <div class="sec">【口味基因检测】</div>
+    <div class="dim"><span class="l">辣度</span><div class="t" style="height:9px"><i style="width:45%;background:#E94E77"></i></div><span class="v">45</span></div><div class="dim"><span class="l">甜度</span><div class="t" style="height:13px"><i style="width:100%;background:#E94E77"></i></div><span class="v">100</span></div><div class="dim"><span class="l">冰爽</span><div class="t" style="height:9px"><i style="width:56%;background:#E94E77"></i></div><span class="v">56</span></div><div class="dim"><span class="l">饱腹</span><div class="t" style="height:9px"><i style="width:51%;background:#E94E77"></i></div><span class="v">51</span></div><div class="dim"><span class="l">分享</span><div class="t" style="height:9px"><i style="width:66%;background:#E94E77"></i></div><span class="v">66</span></div><div class="dim"><span class="l">治愈</span><div class="t" style="height:9px"><i style="width:76%;background:#E94E77"></i></div><span class="v">76</span></div>
+    <div class="sec">【处方】</div>
+    <div class="rx"><div class="rx-head">Rp.</div><div class="rx-row"><span>圆筒冰淇淋</span><span class="dotline"></span><span class="qty">1 支</span></div><div class="rx-row"><span>香芋派</span><span class="dotline"></span><span class="qty">1 个</span></div><div class="rx-row"><span>小薯条</span><span class="dotline"></span><span class="qty">1 份</span></div>
+      <div class="nut"><span>约 <b>460</b> kcal</span><span>蛋白质 <b>6</b> g</span></div>
+    </div>
+    <div class="sec">【医嘱】</div>
+    <div class="advice">甜是奖赏，不是日常。用一支甜筒换走烦恼可以，别换来超标。</div>
+  </div>
+  <div class="sign">
+    <div class="sign-l">主治医师：<b>麦太医</b><br>麦门综合门诊 · 营养科</div>
+    <div class="stamp">麦门门诊<br>诊断专用章</div>
+  </div>
+  <div class="foot">本诊断仅供娱乐参考，不构成医疗、营养或其他专业建议。餐品与营养数据以麦当劳官方渠道实时结果为准。</div>
+</div>
+</body></html>
