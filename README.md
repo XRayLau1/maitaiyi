@@ -14,6 +14,10 @@
   <img alt="License" src="https://img.shields.io/badge/license-MIT-1D9E75?style=flat-square" />
 </p>
 
+<p align="center">
+  <a href="https://xraylau1.github.io/maitaiyi/"><img alt="在线体验" src="https://img.shields.io/badge/%F0%9F%91%89%20%E5%9C%A8%E7%BA%BF%E4%BD%93%E9%AA%8C-%E7%AB%8B%E5%8D%B3%E6%8C%82%E5%8F%B7-DA291C?style=for-the-badge" /></a>
+</p>
+
 ---
 
 ## 👀 先看效果
@@ -222,7 +226,17 @@ git clone <本仓库地址> ~/.workbuddy/skills/maitaiyi
 
 ## ⚡ 免安装直接玩（推荐）
 
-### 方式 A · 网页版，0 安装
+### 🌐 在线体验（手机可玩，推荐）
+
+👉 **<https://xraylau1.github.io/maitaiyi/>**
+
+<p align="center">
+  <img src="assets/qr-code.png" width="260" alt="扫码体验" />
+</p>
+
+扫码或直接点链接，12 项问诊 → 诊断书，全程无需安装。
+
+### 方式 A · 本地网页版，0 安装
 
 直接打开 [`index.html`](index.html)（双击即可，手机上也能开）：
 
@@ -317,7 +331,7 @@ maitaiyi/
 ├── SKILL.md                # Skill 主体：出题 → 计分 → 判定 → 调 MCP → 出报告
 ├── scripts/
 │   └── report_card.py      # 诊断书生成器（纯标准库，可独立运行）
-├── assets/                 # 视觉素材（banner、六体质图、卡片示例）
+├── assets/                 # 视觉素材（banner、六体质图、诊断书示例、体验二维码）
 └── outputs/                # 生成的诊断书输出目录
 ```
 
