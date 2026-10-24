@@ -155,6 +155,13 @@
   .stamp{width:56px;height:56px;border-radius:50%;border:2px solid var(--red);color:var(--red);
     display:grid;place-items:center;font-size:8.5px;font-weight:800;transform:rotate(-12deg);
     line-height:1.2;text-align:center;letter-spacing:.5px;opacity:.88}
+  .qr-foot{display:flex;align-items:center;justify-content:center;gap:9px;padding:11px 20px 2px;
+    border-top:1px dashed var(--dash);margin-top:13px}
+  .qr-foot img{width:58px;height:58px;border-radius:6px;flex-shrink:0}
+  .qr-foot .qt{font-size:9px;color:#9A8A78;line-height:1.55}
+  .qr-foot .qt b{display:block;font-size:10.5px;color:#5C4A38;margin-bottom:1px}
+  .run{margin-left:6px;color:#A08A5E;font-weight:400}
+  .data-note{padding:6px 20px 0;font-size:8.5px;color:#C0B6A8;line-height:1.6}
   .dx-foot{padding:9px 20px 0;font-size:9.5px;color:#B3A99E;line-height:1.7}
 
   .actions{display:flex;gap:9px;margin-top:13px}
@@ -287,7 +294,7 @@
         <div class="rx">
           <div class="rx-head">Rp.</div>
           <div id="rxRows"></div>
-          <div class="rx-nut"><span>约 <b id="rCal">0</b> kcal</span><span>蛋白质 <b id="rPro">0</b> g</span></div>
+          <div class="rx-nut"><span>约 <b id="rCal">0</b> kcal<span class="run" id="rRun"></span></span><span>蛋白质 <b id="rPro">0</b> g</span></div>
           <div class="rx-usage">用法用量：趁热服用，配冰可乐送服，每日不超过一次。</div>
         </div>
 
@@ -302,7 +309,12 @@
         </div>
         <div class="stamp">麦门门诊<br>诊断专用章</div>
       </div>
-      <div class="dx-foot">本诊断仅供娱乐参考，不构成医疗、营养或其他专业建议。餐品与营养数据以麦当劳官方渠道实时结果为准。</div>
+      <div class="qr-foot">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALoAAAC6CAIAAACWbMCmAAADVElEQVR42u3dPXLcMAxAYTqTS7hNnfufxHVaH0M5gBstB38rfq/0eFfS6g0gDCjw47quBdzjl58AdAFdQBfQBc/k988//f3z2XhCX/++N87n56f2ruvO0aOOFXXtlfdCdIFkBLqALqALzqmM9uqOPaIqiLz6bq9WyvvFeu+F6ALJCHQBXUAXnFwZVVY0ebVJVPdn7yqiOl+990J0AV1AF9AFdIHKqIs7T/5RHaK8tXPTVsqJLqAL6AK6gC7Ae1VGUd2fvFqpsvckuoAuoAvoAtAFcyqjaU/1ldMV5s+sEF0gGYEuoAtAF2RURr1P/nfql6f+z7R7IbqALqAL6AK64JzK6B1Xea3C/kvl6r5p90J0AV1AF9AFdMHJ+xlF7TFUOUVtpXWj5r+dlHcHRRdIRqAL6AK64KF8XNfV+Hxe+cbQM3Zfzasl7/yGogskI9AFdAFdsA7uGZ0z77pyFVxlBy1qNyXRBZIR6AK6gC44+T2jqFpp71iVNVfeXPG876lcuSe6QDICXUAX0AWmdk/emWjaTq/z1w3uVU+iCyQj0AV0AV2gMqqZ8xbVE8mrlfKuIupTe504ExggGYEuoAvoApVRzdN43hs6eTMH8jpWlbWS6ALJCHQBXUAXYL04my5vztv8yd6VbyetwtnjUZ8SXSAZgS6gC+iCZTVdyQ5HUVMIpu2jOm0mg+gCyQh0AV1AF+DV2XS9O6vmzW2ovK7evlvUsUQX0AV0AV1AFyyr6daUFXd5VdgqnD5RWd9FHUt0AV1AF9AFdME5ldE7vo8zrcbJm2HeO7dBdAFdQBfQBXTByZVR5Qy3aW8wVXaaVuveUqILJCPQBXQBXbC8Z1TS/Xnq97zjLrf2M4JkBLqALqAL8Op+RmtYLyPvDPNmKVTueZRXl4kukIxAF9AFdIGe0eRZ1ne+ufJdpLy1fL3nLLpAMgJdQBfQBfYz6to/qPLNo94rrZzjfacXJrpAMgJdQBfQBSqjOfRO/17DZiDsdcei5teJLpCMQBfQBXSBymi91aS13unWlZP6TO2GZAS6gC4AXdBVGfVOdXtqrTR/baHoAskIdAFdQBecXBn1TqurrE2idi/KO+feeyG6gC6gC+gCumAdvNMrILqALqAL6AK64NH8Bz0NOtCmuW09AAAAAElFTkSuQmCC" alt="扫码测你的麦门体质">
+        <div class="qt"><b>扫码测你的麦门体质</b>xraylau1.github.io/maitaiyi</div>
+      </div>
+      <div class="dx-foot">本诊断仅供娱乐参考，不构成医疗、营养或其他专业建议。</div>
+      <div class="data-note">* 本页营养数据为演示值，接入麦当劳 MCP 后可实时匹配；餐品与价格以官方渠道为准。</div>
     </div>
 
     <div class="actions">
@@ -576,6 +588,7 @@ function renderResult(t){
     '<div class="rx-row"><span>' + name + '</span><span class="dotline"></span><span class="qty">' + qty + '</span></div>'
   ).join('');
   $('#rCal').textContent = T.cal;
+  $('#rRun').textContent = '≈ 慢跑 ' + Math.round(T.cal / 10 / 5) * 5 + ' 分钟';
   $('#rPro').textContent = T.pro;
   $('#rAdvice').textContent = T.advice;
   $('#paper').style.setProperty('--x', T.color);
@@ -626,7 +639,7 @@ $('#againBtn').onclick = ()=>{ reset(); initBars(); renderQuestion(); show('quiz
 $('#copyBtn').onclick = ()=>{
   const T = TYPES[lastType];
   const txt = '【麦门综合门诊 · 诊断证明书】\n诊断：' + T.emoji + ' ' + T.name + '（' + T.dx + '）\n处方：' +
-    T.rx.map(x=>x[0]).join(' + ') + '\n约 ' + T.cal + ' 大卡\n\n你也来挂个号？';
+    T.rx.map(x=>x[0]).join(' + ') + '\n约 ' + T.cal + ' 大卡（≈ 慢跑 ' + Math.round(T.cal/10/5)*5 + ' 分钟）\n\n你也来挂个号？';
   if(navigator.clipboard){
     navigator.clipboard.writeText(txt).then(()=>toast('已复制，去发群吧')).catch(()=>toast('复制失败，请手动选择'));
   } else { toast('请手动长按复制'); }
